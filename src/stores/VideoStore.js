@@ -3,7 +3,6 @@ import { makeAutoObservable } from 'mobx';
 import { findMaxResult } from './Constants';
 
 export default class VideoDetailStores {
-  videoDetails = [];
   convertArray = [];
   hiddenVideoDetails = [
     {
@@ -67,9 +66,10 @@ export default class VideoDetailStores {
   };
 
   async getVideoDetailsAsync(maxResult) {
-    let ids = [];
-    const hiddenvideoIdsForChosenShow = this.hiddenVideoDetails.filter(obj => {
-      return this.rootStore.selectStore.chosenOption.includes(obj.channel_id);
+    let channelidsAndHiddenVideoIds = [];
+    let videoDetailsToDisplay = [];
+    const hiddenvideoIdsForChosenShow = this.hiddenVideoDetails.filter(videoDetail => {
+      return this.rootStore.selectStore.chosenOption.includes(videoDetail.channel_id);
     });
 
     const arrayOfHiddenVideoIds = [
@@ -79,15 +79,15 @@ export default class VideoDetailStores {
     ];
 
     this.rootStore.selectStore.chosenOption.length === 0
-      ? (ids = this.hiddenVideoDetails)
-      : (ids = hiddenvideoIdsForChosenShow);
+      ? (channelidsAndHiddenVideoIds = this.hiddenVideoDetails)
+      : (channelidsAndHiddenVideoIds = hiddenvideoIdsForChosenShow);
 
-    ids.forEach(id => {
+    channelidsAndHiddenVideoIds.forEach(id => {
       getDataFromApi(id.channel_id, maxResult + id.hiddenVideoId.length)
         .then(videos => {
-          this.videoDetails.push(videos);
-          this.videoDetails = this.videoDetails.flat();
-          const convertArrayWithoutHiddenIds = this.videoDetails.filter(
+          videoDetailsToDisplay.push(videos);
+          videoDetailsToDisplay = videoDetailsToDisplay.flat();
+          const convertArrayWithoutHiddenIds = videoDetailsToDisplay.filter(
             item => !arrayOfHiddenVideoIds.includes(item.id.videoId || item.id.playlistId),
           );
           this.modifyArray(convertArrayWithoutHiddenIds);
