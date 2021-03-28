@@ -35,39 +35,10 @@ export default class VideoDetailStores {
     return this.convertArray;
   };
 
-  hideClip(item) {
-    const filteredItem = this.convertArray.findIndex(video => video.id.videoId === item.id.videoId);
-    if (filteredItem > -1) {
-      this.convertArray.splice(filteredItem, 1);
-    }
-  }
-
-  addHiddenClipIdToHiddenVideoDetails = item => {
-    const toBeHidden = this.hiddenVideoDetails.find(
-      videoItem => videoItem.channel_id === item.snippet.channelId,
-    );
-    const hiddenVideo = {
-      ...toBeHidden,
-      hiddenVideoId: [...toBeHidden.hiddenVideoId, item.id.videoId || item.id.playlistId],
-    };
-    this.hiddenVideoDetails = this.hiddenVideoDetails.map(v =>
-      v.channel_id !== item.snippet.channelId ? v : hiddenVideo,
-    );
-  };
-
-  handleDeleteClip = videoItem => {
-    this.hideClip(videoItem);
-    this.addHiddenClipIdToHiddenVideoDetails(videoItem);
-  };
-
-  handleSubmit = event => {
-    event.preventDefault();
-    this.getVideoDetailsAsync(findMaxResult(this.rootStore.selectStore.chosenOption));
-  };
-
-  async getVideoDetailsAsync(maxResult) {
+  getVideoDetailsAsync(maxResult) {
     let channelidsAndHiddenVideoIds = [];
     let videoDetailsToDisplay = [];
+
     const hiddenvideoIdsForChosenShow = this.hiddenVideoDetails.filter(videoDetail => {
       return this.rootStore.selectStore.chosenOption.includes(videoDetail.channel_id);
     });
@@ -97,4 +68,34 @@ export default class VideoDetailStores {
         });
     });
   }
+
+  handleSubmit = event => {
+    event.preventDefault();
+    this.getVideoDetailsAsync(findMaxResult(this.rootStore.selectStore.chosenOption));
+  };
+
+  hideClip(item) {
+    const filteredItem = this.convertArray.findIndex(video => video.id.videoId === item.id.videoId);
+    if (filteredItem > -1) {
+      this.convertArray.splice(filteredItem, 1);
+    }
+  }
+
+  addHiddenClipIdToHiddenVideoDetails = item => {
+    const toBeHidden = this.hiddenVideoDetails.find(
+      videoItem => videoItem.channel_id === item.snippet.channelId,
+    );
+    const hiddenVideo = {
+      ...toBeHidden,
+      hiddenVideoId: [...toBeHidden.hiddenVideoId, item.id.videoId || item.id.playlistId],
+    };
+    this.hiddenVideoDetails = this.hiddenVideoDetails.map(v =>
+      v.channel_id !== item.snippet.channelId ? v : hiddenVideo,
+    );
+  };
+
+  handleDeleteClip = videoItem => {
+    this.hideClip(videoItem);
+    this.addHiddenClipIdToHiddenVideoDetails(videoItem);
+  };
 }

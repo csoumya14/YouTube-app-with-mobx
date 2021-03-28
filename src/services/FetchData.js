@@ -1,5 +1,5 @@
 //import React from 'react'
-import youtubeAPI from './youtubeApi';
+import youtubeAPI from './YoutubeApi';
 
 export const getDataFromApi = (channelId, maxResults) => {
   return new Promise((resolve, reject) => {

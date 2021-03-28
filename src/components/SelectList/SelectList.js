@@ -3,19 +3,19 @@ import { observer } from 'mobx-react-lite';
 import './SelectList.css';
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
-const SelectList = ({ store1, store }) => {
+const SelectList = ({ selectStore, videoStore }) => {
   return (
     <div>
-      <form className="form-element" onSubmit={store.handleSubmit}>
+      <form className="form-element" onSubmit={videoStore.handleSubmit}>
         <label htmlFor="shows">Choose one or more shows:</label>
         <select
           multiple={true}
           id="shows"
           className="select-element"
-          value={store1.chosenOption}
-          onChange={event => store1.updateChosenShow(event.target.value)}
+          value={selectStore.chosenOption}
+          onChange={event => selectStore.updateChosenShow(event.target.value)}
         >
-          {store1.optionsToShow.map(item => (
+          {selectStore.optionsToShow.map(item => (
             <option className="show-list-item" key={item.id} value={item.channel_id}>
               {item.title}
             </option>

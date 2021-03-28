@@ -10,7 +10,7 @@ const App = observer(() => {
 
   return (
     <div className="App">
-      <SelectList store1={selectStore} store={videoStore} />
+      <SelectList selectStore={selectStore} videoStore={videoStore} />
       <ClipList store={videoStore} />
     </div>
   );
